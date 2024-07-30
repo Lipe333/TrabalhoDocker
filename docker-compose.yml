@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DB1_URL: "mongodb://db1:27017/db1"
+      DB2_URL: "mongodb://db2:27017/db2"
+    depends_on:
+      - db1
+      - db2
+
+  db1:
+    image: mongo:latest
+    volumes:
+      - db1_data:/data/db
+    ports:
+      - "27017:27017"
+
+  db2:
+    image: mongo:latest
+    volumes:
+      - db2_data:/data/db
+    ports:
+      - "27018:27017"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:3001" # Alterado de 80 para 8080
+    depends_on:
+      - backend
+
+volumes:
+  db1_data:
+  db2_data:
